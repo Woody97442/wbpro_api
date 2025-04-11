@@ -16,7 +16,6 @@ const groupedRoutes = {
       path: "/api/users",
       description: "Lister tous les utilisateurs",
     },
-    { method: "POST", path: "/api/users", description: "Créer un utilisateur" },
     {
       method: "GET",
       path: "/api/users/:id",
