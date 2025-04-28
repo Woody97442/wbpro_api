@@ -18,17 +18,19 @@ export async function POST(req: Request) {
     const { email, password } = await req.json()
 
     const user = await prisma.user.findUnique({ where: { email } })
+
     if (!user) {
         return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
     }
 
     const isPasswordValid = await compare(password, user.password)
+
     if (!isPasswordValid) {
         return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 })
     }
 
     const token = await signJwtToken(
-        { id: user.id, email: user.email },
+        { id: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET!
     )
 

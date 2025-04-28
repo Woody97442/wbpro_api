@@ -12,6 +12,11 @@ import { ThemeToggle } from "@/components/theme-toggle";
 const groupedRoutes = {
   users: [
     {
+      method: "POST",
+      path: "/api/users",
+      description: "Créer un utilisateur par admin",
+    },
+    {
       method: "GET",
       path: "/api/users",
       description: "Lister tous les utilisateurs",
@@ -45,6 +50,8 @@ export default function ApiDocsPage() {
     {}
   );
 
+  const [adminToken, setAdminToken] = useState<string>("");
+
   const handleChange = (
     key: string,
     field: keyof RouteTestState,
@@ -59,6 +66,30 @@ export default function ApiDocsPage() {
     }));
   };
 
+  const getTokenAdmin = async () => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: routeState["loginEmail"]?.body,
+          password: routeState["loginPassword"]?.body,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.token) {
+        setAdminToken(data.token);
+      } else {
+        setAdminToken("Erreur de connexion");
+      }
+    } catch (error) {
+      setAdminToken("Erreur réseau");
+    }
+  };
+
   const testRoute = async (key: string, method: string, path: string) => {
     const { id = "", body = "" } = routeState[key] || {};
     const finalPath = path.includes(":id") ? path.replace(":id", id) : path;
@@ -66,13 +97,14 @@ export default function ApiDocsPage() {
     try {
       const res = await fetch(finalPath, {
         method,
-        headers:
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${adminToken}`, // Ajout du token d'admin ici
+        },
+        body:
           method === "POST" || method === "PUT"
-            ? {
-                "Content-Type": "application/json",
-              }
-            : undefined,
-        body: method === "POST" || method === "PUT" ? body : undefined,
+            ? JSON.stringify(JSON.parse(body))
+            : undefined, // JSON.stringify après JSON.parse pour assurer que c'est un JSON valide
       });
 
       const contentType = res.headers.get("content-type");
@@ -95,6 +127,31 @@ export default function ApiDocsPage() {
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-4xl font-bold">📘 API Documentation</h1>
         <ThemeToggle />
+      </div>
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex justify-between gap-4">
+          <Input
+            placeholder="Email"
+            value={routeState["loginEmail"]?.body || ""}
+            onChange={(e) => handleChange("loginEmail", "body", e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="Mot de passe"
+            value={routeState["loginPassword"]?.body || ""}
+            onChange={(e) =>
+              handleChange("loginPassword", "body", e.target.value)
+            }
+          />
+          <Button onClick={async () => getTokenAdmin()}>
+            Valider le Token
+          </Button>
+        </div>
+        <Textarea
+          placeholder="Token JWT ici..."
+          value={adminToken}
+          readOnly
+        />
       </div>
 
       {Object.entries(groupedRoutes).map(([resource, routes]) => (
@@ -143,9 +200,24 @@ export default function ApiDocsPage() {
                       />
                     )}
 
-                    {(route.method === "POST" || route.method === "PUT") && (
+                    {route.method === "PUT" && (
                       <Textarea
                         placeholder='{"name": "John", "email": "john@mail.com"}'
+                        value={state.body || ""}
+                        onChange={(e) =>
+                          handleChange(key, "body", e.target.value)
+                        }
+                      />
+                    )}
+
+                    {route.method === "POST" && (
+                      <Textarea
+                        placeholder='{
+                          "email": "newuser@example.com",
+                          "password": "password123",
+                          "name": "John Doe",
+                          "role": "USER"
+                          }'
                         value={state.body || ""}
                         onChange={(e) =>
                           handleChange(key, "body", e.target.value)
