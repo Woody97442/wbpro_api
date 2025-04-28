@@ -37,10 +37,43 @@ const groupedRoutes = {
       description: "Supprimer un utilisateur",
     },
   ],
+  products: [
+    {
+      method: "POST",
+      path: "/api/products",
+      description: "Créer un nouveau produit",
+    },
+    {
+      method: "GET",
+      path: "/api/products",
+      description: "Lister tous les produits",
+    },
+    {
+      method: "GET",
+      path: "/api/products/:id",
+      description: "Récupérer un produit par ID",
+    },
+    {
+      method: "PUT",
+      path: "/api/products/:id",
+      description: "Modifier un produit",
+    },
+    {
+      method: "DELETE",
+      path: "/api/products/:id",
+      description: "Supprimer un produit",
+    },
+    {
+      method: "GET",
+      path: "/api/products/reference/:reference",
+      description: "Récupérer un produit par sa Reference",
+    },
+  ],
 };
 
 type RouteTestState = {
   id?: string;
+  reference?: string;
   body?: string;
   response?: string | null;
 };
@@ -91,8 +124,13 @@ export default function ApiDocsPage() {
   };
 
   const testRoute = async (key: string, method: string, path: string) => {
-    const { id = "", body = "" } = routeState[key] || {};
-    const finalPath = path.includes(":id") ? path.replace(":id", id) : path;
+    const { id = "", body = "", reference = "" } = routeState[key] || {};
+
+    let finalPath = path.includes(":id") ? path.replace(":id", id) : path;
+    if (path.includes(":reference"))
+      finalPath = path.includes(":reference")
+        ? path.replace(":reference", reference)
+        : path;
 
     try {
       const res = await fetch(finalPath, {
@@ -147,11 +185,9 @@ export default function ApiDocsPage() {
             Valider le Token
           </Button>
         </div>
-        <Textarea
-          placeholder="Token JWT ici..."
-          value={adminToken}
-          readOnly
-        />
+        <p style={{ overflowWrap: "anywhere" }}>
+          Token d'admin: <span>{adminToken}</span>
+        </p>
       </div>
 
       {Object.entries(groupedRoutes).map(([resource, routes]) => (
@@ -196,6 +232,16 @@ export default function ApiDocsPage() {
                         value={state.id || ""}
                         onChange={(e) =>
                           handleChange(key, "id", e.target.value)
+                        }
+                      />
+                    )}
+
+                    {route.path.includes(":reference") && (
+                      <Input
+                        placeholder="Ref"
+                        value={state.reference || ""}
+                        onChange={(e) =>
+                          handleChange(key, "reference", e.target.value)
                         }
                       />
                     )}

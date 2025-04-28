@@ -21,3 +21,15 @@ model User {
   role      Role     @default(USER)
   createdAt DateTime @default(now())
 }
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  reference   String   @unique
+  description String?  @db.Text
+  price       Float
+  stock       Int      @default(0)
+  images      String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
