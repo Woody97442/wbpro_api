@@ -1,8 +1,10 @@
 import { z } from 'zod'
 
-export const userCreateSchema = z.object({
-    name: z.string().min(1, 'Le nom est requis.'),
-    email: z.string().email('Email invalide.'),
+export const userUpdateProfileSchema = z.object({
+    newProfilName: z.string().min(3, 'Le nom est requis.'),
 })
 
-export const userUpdateSchema = userCreateSchema.partial() // tout est optionnel pour PUT
+export const userUpdatePasswordSchema = z.object({
+    currentPassword: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères.'),
+    newPassword: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères.'),
+})

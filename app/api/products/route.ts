@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkLevelAccess } from '@/lib/tools';
+import { handleCors } from '@/middleware';
 
 /**
  * Lister tous les Produits.
@@ -18,14 +19,14 @@ export async function GET() {
                 images: true
             }
         })
-        return NextResponse.json(products)
+        return handleCors(NextResponse.json(products))
 
     } catch (err) {
         console.error(err)
-        return NextResponse.json(
+        return handleCors(NextResponse.json(
             { error: 'Erreur lors de la récupération des produits.' },
             { status: 500 }
-        )
+        ))
     }
 }
 
@@ -41,13 +42,13 @@ export async function POST(req: Request) {
     // Vérifier si l'utilisateur a un niveau d'accès suffisant (niveau 2 pour admin)
     const check = await checkLevelAccess(token, 2)
     if (check.access === false) {
-        return NextResponse.json({ error: check.error }, { status: check.status })
+        return handleCors(NextResponse.json({ error: check.error }, { status: check.status }))
     }
 
     // Vérifie si un produit avec ce nom existe déjà
     const existingProduct = await prisma.product.findUnique({ where: { reference } })
     if (existingProduct) {
-        return NextResponse.json({ error: 'Produit déjà existant' }, { status: 400 })
+        return handleCors(NextResponse.json({ error: 'Produit déjà existant' }, { status: 400 }))
     }
 
     try {
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
             }
         })
 
-        return NextResponse.json({
+        return handleCors(NextResponse.json({
             message: 'Produit créé avec succès',
             product: {
                 id: newProduct.id,
@@ -74,10 +75,14 @@ export async function POST(req: Request) {
                 reference: newProduct.reference,
                 images: newProduct.images
             },
-        })
+        }))
 
     } catch (err) {
         console.error(err)
-        return NextResponse.json({ error: 'Erreur lors de la création du produit' }, { status: 500 })
+        return handleCors(NextResponse.json({ error: 'Erreur lors de la création du produit' }, { status: 500 }))
     }
+}
+
+export async function OPTIONS(req: NextRequest) {
+    return handleCors(new NextResponse(null, { status: 204 }));
 }

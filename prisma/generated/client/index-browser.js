@@ -126,6 +126,20 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AddressScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  street: 'street',
+  city: 'city',
+  zipCode: 'zipCode',
+  country: 'country',
+  phone: 'phone',
+  userId: 'userId',
+  isDefault: 'isDefault',
+  label: 'label'
+};
+
 exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -136,6 +150,56 @@ exports.Prisma.ProductScalarFieldEnum = {
   images: 'images',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  cartId: 'cartId',
+  status: 'status',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  paymentMethod: 'paymentMethod',
+  isPaid: 'isPaid',
+  paidAt: 'paidAt',
+  shippingAddress: 'shippingAddress',
+  billingAddress: 'billingAddress',
+  trackingNumber: 'trackingNumber',
+  notes: 'notes'
+};
+
+exports.Prisma.CartScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  isActive: 'isActive',
+  userId: 'userId',
+  total: 'total'
+};
+
+exports.Prisma.InvoiceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  orderId: 'orderId',
+  invoiceNumber: 'invoiceNumber',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  issuedDate: 'issuedDate',
+  dueDate: 'dueDate',
+  pdfUrl: 'pdfUrl',
+  notes: 'notes'
+};
+
+exports.Prisma.CartItemScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  cartId: 'cartId',
+  productId: 'productId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice'
 };
 
 exports.Prisma.SortOrder = {
@@ -154,20 +218,60 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.AddressOrderByRelevanceFieldEnum = {
+  street: 'street',
+  city: 'city',
+  zipCode: 'zipCode',
+  country: 'country',
+  phone: 'phone',
+  label: 'label'
+};
+
 exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   name: 'name',
   reference: 'reference',
   description: 'description',
   images: 'images'
 };
+
+exports.Prisma.OrderOrderByRelevanceFieldEnum = {
+  currency: 'currency',
+  paymentMethod: 'paymentMethod',
+  shippingAddress: 'shippingAddress',
+  billingAddress: 'billingAddress',
+  trackingNumber: 'trackingNumber',
+  notes: 'notes'
+};
+
+exports.Prisma.InvoiceOrderByRelevanceFieldEnum = {
+  invoiceNumber: 'invoiceNumber',
+  currency: 'currency',
+  pdfUrl: 'pdfUrl',
+  notes: 'notes'
+};
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   ADMIN: 'ADMIN'
 };
 
+exports.OrderStatus = exports.$Enums.OrderStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  PROCESSING: 'PROCESSING',
+  SHIPPED: 'SHIPPED',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
-  Product: 'Product'
+  Address: 'Address',
+  Product: 'Product',
+  Order: 'Order',
+  Cart: 'Cart',
+  Invoice: 'Invoice',
+  CartItem: 'CartItem'
 };
 
 /**

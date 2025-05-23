@@ -1,4 +1,5 @@
 import { jwtVerify } from 'jose';
+import { prisma } from '@/lib/prisma'
 
 interface AccessResult {
     error: string;
@@ -124,4 +125,28 @@ export async function checkThisAccess(token: string | undefined, requestedUserId
     }
 
     return result;  // Accès autorisé si c'est son propre compte
+}
+
+/**
+ * Calcule le total du panier et met à jour le champ 'total' du panier.
+ * @param cartId L'ID du panier à mettre à jour.
+ */
+export async function updateCartTotal(cartId: number) {
+    // Récupérer tous les articles du panier
+    const cartItems = await prisma.cartItem.findMany({
+        where: { cartId },
+        select: {
+            quantity: true,
+            unitPrice: true,
+        },
+    })
+
+    // Calculer le total du panier
+    const total = cartItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
+
+    // Mettre à jour le total dans le panier
+    await prisma.cart.update({
+        where: { id: cartId },
+        data: { total },
+    })
 }

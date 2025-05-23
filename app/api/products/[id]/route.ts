@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkLevelAccess } from '@/lib/tools';
+import { handleCors } from '@/middleware';
 
 interface Params {
     params: {
@@ -15,7 +16,7 @@ export async function GET(_req: Request, { params }: Params) {
     const id = parseInt(params.id, 10);
 
     if (isNaN(id)) {
-        return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+        return handleCors(NextResponse.json({ error: "ID invalide" }, { status: 400 }));
     }
 
     try {
@@ -33,13 +34,13 @@ export async function GET(_req: Request, { params }: Params) {
         });
 
         if (!product) {
-            return NextResponse.json({ error: "Produit non trouvé" }, { status: 404 });
+            return handleCors(NextResponse.json({ error: "Produit non trouvé" }, { status: 404 }));
         }
 
-        return NextResponse.json(product);
+        return handleCors(NextResponse.json(product));
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ error: "Erreur lors de la récupération du produit." }, { status: 500 });
+        return handleCors(NextResponse.json({ error: "Erreur lors de la récupération du produit." }, { status: 500 }));
     }
 }
 
@@ -56,11 +57,11 @@ export async function PUT(req: Request, { params }: Params) {
     // Vérifier si l'utilisateur a un niveau d'accès suffisant (niveau 2 pour admin)
     const check = await checkLevelAccess(token, 2)
     if (check.access === false) {
-        return NextResponse.json({ error: check.error }, { status: check.status })
+        return handleCors(NextResponse.json({ error: check.error }, { status: check.status }))
     }
 
     if (isNaN(id)) {
-        return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+        return handleCors(NextResponse.json({ error: "ID invalide" }, { status: 400 }));
     }
 
     try {
@@ -73,7 +74,7 @@ export async function PUT(req: Request, { params }: Params) {
         });
 
         if (existingProductWithReference) {
-            return NextResponse.json({ error: 'Référence déjà utilisée' }, { status: 400 });
+            return handleCors(NextResponse.json({ error: 'Référence déjà utilisée' }, { status: 400 }));
         }
 
         const updatedProduct = await prisma.product.update({
@@ -88,10 +89,10 @@ export async function PUT(req: Request, { params }: Params) {
             },
         });
 
-        return NextResponse.json(updatedProduct);
+        return handleCors(NextResponse.json(updatedProduct));
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ error: "Erreur lors de la mise à jour du produit." }, { status: 500 });
+        return handleCors(NextResponse.json({ error: "Erreur lors de la mise à jour du produit." }, { status: 500 }));
     }
 }
 
@@ -106,13 +107,13 @@ export async function DELETE(req: Request, { params }: Params) {
     // Vérifier si l'utilisateur a un niveau d'accès suffisant (niveau 2 pour admin)
     const check = await checkLevelAccess(token, 2)
     if (check.access === false) {
-        return NextResponse.json({ error: check.error }, { status: check.status })
+        return handleCors(NextResponse.json({ error: check.error }, { status: check.status }))
     }
 
     const id = parseInt(params.id, 10);
 
     if (isNaN(id)) {
-        return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+        return handleCors(NextResponse.json({ error: "ID invalide" }, { status: 400 }));
     }
 
     try {
@@ -120,9 +121,13 @@ export async function DELETE(req: Request, { params }: Params) {
             where: { id },
         });
 
-        return NextResponse.json({ message: "Produit supprimé avec succès", product });
+        return handleCors(NextResponse.json({ message: "Produit supprimé avec succès", product }));
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ error: "Erreur lors de la suppression du produit." }, { status: 500 });
+        return handleCors(NextResponse.json({ error: "Erreur lors de la suppression du produit." }, { status: 500 }));
     }
+}
+
+export async function OPTIONS(req: NextRequest) {
+    return handleCors(new NextResponse(null, { status: 204 }));
 }

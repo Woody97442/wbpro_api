@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { handleCors } from '@/middleware';
 
 interface Params {
     params: {
@@ -14,7 +15,7 @@ export async function GET(_req: Request, { params }: Params) {
     const { reference } = await params;
 
     if (!reference) {
-        return NextResponse.json({ error: "Référence invalide" }, { status: 400 });
+        return handleCors(NextResponse.json({ error: "Référence invalide" }, { status: 400 }));
     }
 
     try {
@@ -31,12 +32,16 @@ export async function GET(_req: Request, { params }: Params) {
         });
 
         if (!product) {
-            return NextResponse.json({ error: "Produit non trouvé" }, { status: 404 });
+            return handleCors(NextResponse.json({ error: "Produit non trouvé" }, { status: 404 }));
         }
 
-        return NextResponse.json(product);
+        return handleCors(NextResponse.json(product));
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ error: "Erreur lors de la récupération du produit." }, { status: 500 });
+        return handleCors(NextResponse.json({ error: "Erreur lors de la récupération du produit." }, { status: 500 }));
     }
+}
+
+export async function OPTIONS(req: NextRequest) {
+    return handleCors(new NextResponse(null, { status: 204 }));
 }

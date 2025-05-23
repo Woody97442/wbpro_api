@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+import { handleCors } from '@/middleware'
 
 export async function POST(req: Request) {
     const { email, password, name } = await req.json()
@@ -8,7 +9,7 @@ export async function POST(req: Request) {
     // Vérifie que l'utilisateur n'existe pas déjà
     const existingUser = await prisma.user.findUnique({ where: { email } })
     if (existingUser) {
-        return NextResponse.json({ error: 'Email déjà utilisé' }, { status: 400 })
+        return handleCors(NextResponse.json({ error: 'Email déjà utilisé' }, { status: 400 }))
     }
 
     // Hash du mot de passe
@@ -23,12 +24,18 @@ export async function POST(req: Request) {
         },
     })
 
-    return NextResponse.json({
-        message: 'Utilisateur créé avec succès',
-        user: {
-            id: newUser.id,
-            email: newUser.email,
-            name: newUser.name,
-        },
-    })
+    return handleCors(NextResponse.json(
+        {
+            message: "Utilisateur créé avec succès",
+            user: {
+                id: newUser.id,
+                email: newUser.email,
+                name: newUser.name,
+            },
+        }
+    ));
+}
+
+export async function OPTIONS(req: NextRequest) {
+    return handleCors(new NextResponse(null, { status: 204 }));
 }

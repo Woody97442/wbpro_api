@@ -4,6 +4,11 @@ import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
 export async function middleware(req: NextRequest) {
+    // Autoriser toutes les requêtes OPTIONS sans JWT
+    if (req.method === 'OPTIONS') {
+        return handleCors(new NextResponse(null, { status: 204 }))
+    }
+
     const token = req.headers.get('authorization')?.replace('Bearer ', '')
 
     if (!token) {
@@ -27,4 +32,11 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
     matcher: ['/api/users/:path*'],
+}
+
+export function handleCors(res: NextResponse) {
+    res.headers.set("Access-Control-Allow-Origin", "*") // ou "http://localhost:5173" en dev
+    res.headers.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+    res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+    return res
 }

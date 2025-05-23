@@ -13,23 +13,135 @@ enum Role {
   ADMIN
 }
 
+enum OrderStatus {
+  PENDING // En attente de paiement
+  PAID // Payée
+  PROCESSING // En cours de préparation
+  SHIPPED // Expédiée
+  DELIVERED // Livrée
+  CANCELLED // Annulée
+  REFUNDED // Remboursée
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
-  role      Role     @default(USER)
+  role      Role      @default(USER)
+  orders    Order[]
+  carts     Cart[]
+  addresses Address[]
+  createdAt DateTime  @default(now())
+}
+
+model Address {
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  street  String
+  city    String
+  zipCode String
+  country String
+  phone   String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  isDefault Boolean @default(false)
+  label     String? // exemple : "Domicile", "Bureau"
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
-  reference   String   @unique
-  description String?  @db.Text
+  reference   String     @unique
+  description String?    @db.Text
   price       Float
-  stock       Int      @default(0)
-  images      String   @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  stock       Int        @default(0)
+  images      String     @db.Text
+  cartItems   CartItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  cartId Int  @unique
+  cart   Cart @relation(fields: [cartId], references: [id])
+
+  // Infos de la commande
+  status        OrderStatus @default(PENDING)
+  totalAmount   Float
+  currency      String      @default("EUR")
+  paymentMethod String? // ex: "credit_card", "paypal", etc.
+  isPaid        Boolean     @default(false)
+  paidAt        DateTime?
+
+  shippingAddress String?
+  billingAddress  String?
+
+  // Optionnel : numéro de suivi, etc.
+  trackingNumber String?
+  notes          String?
+
+  // Relations inverses
+  invoice Invoice? // Si tu génères des factures
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  isActive Boolean @default(true)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  total Float @default(0)
+
+  items CartItem[]
+  order Order? // Une commande associée une fois validée
+}
+
+model Invoice {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderId Int   @unique
+  order   Order @relation(fields: [orderId], references: [id])
+
+  invoiceNumber String @unique
+  totalAmount   Float
+  currency      String @default("EUR")
+
+  issuedDate DateTime
+  dueDate    DateTime?
+
+  pdfUrl String? // Lien vers la facture en PDF si générée
+  notes  String?
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cartId Int
+  cart   Cart @relation(fields: [cartId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity  Int   @default(1)
+  unitPrice Float // Prix au moment de l'ajout (important pour garder un historique correct)
 }

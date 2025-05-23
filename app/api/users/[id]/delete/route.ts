@@ -3,14 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { checkThisAccess } from '@/lib/tools';
 import { handleCors } from '@/middleware';
 
+
 /**
- * Récupérer un utilisateur par ID
+ * Supprimer un utilisateur par ID
  */
-export async function GET(
-    req: NextRequest,
-    context: { params: { id: string } }
-) {
-    const params = await context.params // Attente explicite de params
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+    const params = await context.params  // Attente explicite de params
     const { id } = params
 
     try {
@@ -24,35 +22,23 @@ export async function GET(
         }
 
         const userId = parseInt(id, 10)
-
         if (isNaN(userId)) {
             return handleCors(NextResponse.json({ error: 'ID invalide' }, { status: 400 }))
         }
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.delete({
             where: { id: userId },
             select: {
                 id: true,
                 email: true,
-                name: true,
+                name: true
             }
         })
 
-        if (!user) {
-            return handleCors(NextResponse.json(
-                { error: 'Utilisateur non trouvé.' },
-                { status: 404 }
-            ))
-        }
-
-        return handleCors(NextResponse.json(user))
-
+        return handleCors(NextResponse.json({ message: 'Utilisateur supprimé.', user }))
     } catch (err) {
         console.error(err)
-        return handleCors(NextResponse.json(
-            { error: 'Erreur lors de la récupération de l’utilisateur.' },
-            { status: 500 }
-        ))
+        return handleCors(NextResponse.json({ error: 'Erreur lors de la suppression de l’utilisateur.' }, { status: 500 }))
     }
 }
 

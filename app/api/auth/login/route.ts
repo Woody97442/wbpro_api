@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { SignJWT } from 'jose'
+import { handleCors } from '@/middleware'
 
 async function signJwtToken(payload: object, secret: string) {
     const iat = Math.floor(Date.now() / 1000)
@@ -20,19 +21,32 @@ export async function POST(req: Request) {
     const user = await prisma.user.findUnique({ where: { email } })
 
     if (!user) {
-        return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
+        return handleCors(NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 }))
     }
 
     const isPasswordValid = await compare(password, user.password)
 
     if (!isPasswordValid) {
-        return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 })
+        return handleCors(NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 }))
     }
 
     const token = await signJwtToken(
-        { id: user.id, email: user.email, role: user.role },
+        { id: user.id, email: user.email, role: user.role, name: user.name },
         process.env.JWT_SECRET!
     )
 
-    return NextResponse.json({ token })
+    return handleCors(NextResponse.json(
+        { token },
+        {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': 'http://localhost:5173',
+            },
+        }
+    ))
+}
+
+// Handler OPTIONS pour le preflight CORS
+export async function OPTIONS(req: NextRequest) {
+    return handleCors(new NextResponse(null, { status: 204 }));
 }
