@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { SignJWT } from 'jose'
@@ -47,6 +47,6 @@ export async function POST(req: Request) {
 }
 
 // Handler OPTIONS pour le preflight CORS
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(req: Request) {
     return handleCors(new NextResponse(null, { status: 204 }));
 }

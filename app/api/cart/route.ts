@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { checkThisAccess } from '@/lib/tools'
 import { handleCors } from '@/middleware'
+import { UserSession } from '@/types/types'
+import { verifyJwtToken } from '@/lib/tools'
 
+const secret = process.env.JWT_SECRET
 export async function GET(req: NextRequest) {
     try {
         const token = req.headers.get('Authorization')?.replace('Bearer ', '')
@@ -10,28 +12,30 @@ export async function GET(req: NextRequest) {
             return handleCors(NextResponse.json({ error: 'Token manquant' }, { status: 401 }))
         }
 
-        const { searchParams } = new URL(req.url)
-        const userId = searchParams.get('userId')
+        const userSession = await verifyJwtToken(token) as UserSession
+
+        if (!userSession) {
+            return handleCors(NextResponse.json({ error: 'Token manquant' }, { status: 401 }))
+        }
+
+        const userId = userSession.id
 
         if (!userId) {
-            return handleCors(NextResponse.json({ error: 'userId manquant' }, { status: 400 }))
+            return handleCors(NextResponse.json({ error: 'userId introuvable dans le token' }, { status: 400 }))
         }
 
-        const userCheck = await checkThisAccess(token, userId)
-        if (!userCheck.access) {
-            return handleCors(NextResponse.json({ error: userCheck.error }, { status: userCheck.status }))
-        }
-
-        const parsedUserId = parseInt(userId, 10)
-
-        // Récupère le panier de l'utilisateur
+        // 🔄 Récupère le panier de l'utilisateur
         const cart = await prisma.cart.findFirst({
             where: {
-                userId: parsedUserId,
+                userId: userId,
                 isActive: true,
             },
             include: {
-                items: true, // Inclure les items du panier
+                items: {
+                    include: {
+                        product: true,
+                    },
+                },
             },
         })
 

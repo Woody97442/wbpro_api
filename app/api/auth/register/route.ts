@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { handleCors } from '@/middleware'
@@ -36,6 +36,6 @@ export async function POST(req: Request) {
     ));
 }
 
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(req: Request) {
     return handleCors(new NextResponse(null, { status: 204 }));
 }

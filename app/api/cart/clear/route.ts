@@ -1,36 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { checkThisAccess, updateCartTotal } from '@/lib/tools'
+import { checkThisAccess, updateCartTotal, verifyJwtToken } from '@/lib/tools'
 import { handleCors } from '@/middleware'
+import { UserSession } from '@/types/types'
 
 export async function DELETE(req: NextRequest) {
     try {
         const token = req.headers.get('Authorization')?.replace('Bearer ', '')
         if (!token) {
-            return handleCors(NextResponse.json({ error: 'Token manquant' }, { status: 401 }))
+            return handleCors(
+                NextResponse.json({ error: 'Token manquant' }, { status: 401 })
+            )
         }
 
-        const { userId } = await req.json()
+        const userSession = await verifyJwtToken(token) as UserSession
+        const userId = userSession?.id
 
         if (!userId) {
-            return handleCors(NextResponse.json({ error: 'userId manquant' }, { status: 400 }))
+            return handleCors(
+                NextResponse.json({ error: 'userId introuvable dans le token' }, { status: 400 })
+            )
         }
 
-        const userCheck = await checkThisAccess(token, userId)
+        const userCheck = await checkThisAccess(token, userId.toString())
         if (!userCheck.access) {
-            return handleCors(NextResponse.json({ error: userCheck.error }, { status: userCheck.status }))
+            return handleCors(
+                NextResponse.json({ error: userCheck.error }, { status: userCheck.status })
+            )
         }
 
-        // Trouver le panier de l'utilisateur
+        // Récupérer le panier actif
         const cart = await prisma.cart.findFirst({
             where: {
-                userId: parseInt(userId, 10),
+                userId,
                 isActive: true,
             },
         })
 
         if (!cart) {
-            return handleCors(NextResponse.json({ error: 'Panier non trouvé.' }, { status: 404 }))
+            return handleCors(
+                NextResponse.json({ error: 'Panier non trouvé.' }, { status: 404 })
+            )
         }
 
         // Supprimer tous les articles du panier
@@ -40,13 +50,21 @@ export async function DELETE(req: NextRequest) {
             },
         })
 
-        // Recalculer le total du panier
-        await updateCartTotal(cart.id)
+        // Supprimer le panier lui-même
+        await prisma.cart.delete({
+            where: {
+                id: cart.id,
+            },
+        })
 
-        return handleCors(NextResponse.json({ message: 'Panier vidé.' }))
+        return handleCors(
+            NextResponse.json({ message: 'Panier supprimé.' })
+        )
     } catch (err) {
         console.error(err)
-        return handleCors(NextResponse.json({ error: 'Erreur lors de la suppression du panier.' }, { status: 500 }))
+        return handleCors(
+            NextResponse.json({ error: 'Erreur lors de la suppression du panier.' }, { status: 500 })
+        )
     }
 }
 

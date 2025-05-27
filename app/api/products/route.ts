@@ -16,10 +16,17 @@ export async function GET() {
                 price: true,
                 stock: true,
                 reference: true,
-                images: true
+                images: true,
+                createdAt: true,
+                updatedAt: true,
+                specialty: true,
+                country: true,
+                preferences: true,
+                likes: true,
+                dislikes: true,
             }
         })
-        return handleCors(NextResponse.json(products))
+        return handleCors(NextResponse.json({ success: true, result: products }))
 
     } catch (err) {
         console.error(err)
@@ -34,24 +41,25 @@ export async function GET() {
  * Créer un produit manuellement (uniquement accessible aux admins).
  */
 export async function POST(req: Request) {
-    const { name, description, price, stock, reference, images } = await req.json()
-
-    // Récupérer le token dans l'en-tête de la requête
-    const token = req.headers.get('Authorization')?.split(' ')[1]
-
-    // Vérifier si l'utilisateur a un niveau d'accès suffisant (niveau 2 pour admin)
-    const check = await checkLevelAccess(token, 2)
-    if (check.access === false) {
-        return handleCors(NextResponse.json({ error: check.error }, { status: check.status }))
-    }
-
-    // Vérifie si un produit avec ce nom existe déjà
-    const existingProduct = await prisma.product.findUnique({ where: { reference } })
-    if (existingProduct) {
-        return handleCors(NextResponse.json({ error: 'Produit déjà existant' }, { status: 400 }))
-    }
-
     try {
+        const { name, description, price, stock, reference, images } = await req.json()
+
+        // Récupérer le token dans l'en-tête de la requête
+        const token = req.headers.get('Authorization')?.split(' ')[1]
+
+        // Vérifier si l'utilisateur a un niveau d'accès suffisant (niveau 2 pour admin)
+        const check = await checkLevelAccess(token, 2)
+        if (!check.access) {
+            return handleCors(NextResponse.json({ error: check.error }, { status: check.status }))
+        }
+
+        // Vérifie si un produit avec ce nom existe déjà
+        const existingProduct = await prisma.product.findUnique({ where: { reference } })
+        if (existingProduct) {
+            return handleCors(NextResponse.json({ error: 'Produit déjà existant' }, { status: 400 }))
+        }
+
+
         // Création du produit
         const newProduct = await prisma.product.create({
             data: {
@@ -75,7 +83,10 @@ export async function POST(req: Request) {
                 reference: newProduct.reference,
                 images: newProduct.images
             },
-        }))
+        },
+            { status: 201 }
+        )
+        )
 
     } catch (err) {
         console.error(err)
@@ -83,6 +94,6 @@ export async function POST(req: Request) {
     }
 }
 
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(req: Request) {
     return handleCors(new NextResponse(null, { status: 204 }));
 }

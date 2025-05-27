@@ -144,8 +144,15 @@ exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
   reference: 'reference',
+  shortDescription: 'shortDescription',
   description: 'description',
   price: 'price',
+  rating: 'rating',
+  country: 'country',
+  specialty: 'specialty',
+  preferences: 'preferences',
+  likes: 'likes',
+  dislikes: 'dislikes',
   stock: 'stock',
   images: 'images',
   createdAt: 'createdAt',
@@ -230,7 +237,13 @@ exports.Prisma.AddressOrderByRelevanceFieldEnum = {
 exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   name: 'name',
   reference: 'reference',
+  shortDescription: 'shortDescription',
   description: 'description',
+  country: 'country',
+  specialty: 'specialty',
+  preferences: 'preferences',
+  likes: 'likes',
+  dislikes: 'dislikes',
   images: 'images'
 };
 

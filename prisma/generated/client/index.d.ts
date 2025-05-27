@@ -3607,12 +3607,14 @@ export namespace Prisma {
   export type ProductAvgAggregateOutputType = {
     id: number | null
     price: number | null
+    rating: number | null
     stock: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     id: number | null
     price: number | null
+    rating: number | null
     stock: number | null
   }
 
@@ -3620,8 +3622,15 @@ export namespace Prisma {
     id: number | null
     name: string | null
     reference: string | null
+    shortDescription: string | null
     description: string | null
     price: number | null
+    rating: number | null
+    country: string | null
+    specialty: string | null
+    preferences: string | null
+    likes: string | null
+    dislikes: string | null
     stock: number | null
     images: string | null
     createdAt: Date | null
@@ -3632,8 +3641,15 @@ export namespace Prisma {
     id: number | null
     name: string | null
     reference: string | null
+    shortDescription: string | null
     description: string | null
     price: number | null
+    rating: number | null
+    country: string | null
+    specialty: string | null
+    preferences: string | null
+    likes: string | null
+    dislikes: string | null
     stock: number | null
     images: string | null
     createdAt: Date | null
@@ -3644,8 +3660,15 @@ export namespace Prisma {
     id: number
     name: number
     reference: number
+    shortDescription: number
     description: number
     price: number
+    rating: number
+    country: number
+    specialty: number
+    preferences: number
+    likes: number
+    dislikes: number
     stock: number
     images: number
     createdAt: number
@@ -3657,12 +3680,14 @@ export namespace Prisma {
   export type ProductAvgAggregateInputType = {
     id?: true
     price?: true
+    rating?: true
     stock?: true
   }
 
   export type ProductSumAggregateInputType = {
     id?: true
     price?: true
+    rating?: true
     stock?: true
   }
 
@@ -3670,8 +3695,15 @@ export namespace Prisma {
     id?: true
     name?: true
     reference?: true
+    shortDescription?: true
     description?: true
     price?: true
+    rating?: true
+    country?: true
+    specialty?: true
+    preferences?: true
+    likes?: true
+    dislikes?: true
     stock?: true
     images?: true
     createdAt?: true
@@ -3682,8 +3714,15 @@ export namespace Prisma {
     id?: true
     name?: true
     reference?: true
+    shortDescription?: true
     description?: true
     price?: true
+    rating?: true
+    country?: true
+    specialty?: true
+    preferences?: true
+    likes?: true
+    dislikes?: true
     stock?: true
     images?: true
     createdAt?: true
@@ -3694,8 +3733,15 @@ export namespace Prisma {
     id?: true
     name?: true
     reference?: true
+    shortDescription?: true
     description?: true
     price?: true
+    rating?: true
+    country?: true
+    specialty?: true
+    preferences?: true
+    likes?: true
+    dislikes?: true
     stock?: true
     images?: true
     createdAt?: true
@@ -3793,8 +3839,15 @@ export namespace Prisma {
     id: number
     name: string
     reference: string
+    shortDescription: string | null
     description: string | null
     price: number
+    rating: number | null
+    country: string | null
+    specialty: string | null
+    preferences: string | null
+    likes: string | null
+    dislikes: string | null
     stock: number
     images: string
     createdAt: Date
@@ -3824,8 +3877,15 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     reference?: boolean
+    shortDescription?: boolean
     description?: boolean
     price?: boolean
+    rating?: boolean
+    country?: boolean
+    specialty?: boolean
+    preferences?: boolean
+    likes?: boolean
+    dislikes?: boolean
     stock?: boolean
     images?: boolean
     createdAt?: boolean
@@ -3840,15 +3900,22 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     reference?: boolean
+    shortDescription?: boolean
     description?: boolean
     price?: boolean
+    rating?: boolean
+    country?: boolean
+    specialty?: boolean
+    preferences?: boolean
+    likes?: boolean
+    dislikes?: boolean
     stock?: boolean
     images?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "reference" | "description" | "price" | "stock" | "images" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "reference" | "shortDescription" | "description" | "price" | "rating" | "country" | "specialty" | "preferences" | "likes" | "dislikes" | "stock" | "images" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
@@ -3863,8 +3930,15 @@ export namespace Prisma {
       id: number
       name: string
       reference: string
+      shortDescription: string | null
       description: string | null
       price: number
+      rating: number | null
+      country: string | null
+      specialty: string | null
+      preferences: string | null
+      likes: string | null
+      dislikes: string | null
       stock: number
       images: string
       createdAt: Date
@@ -4242,8 +4316,15 @@ export namespace Prisma {
     readonly id: FieldRef<"Product", 'Int'>
     readonly name: FieldRef<"Product", 'String'>
     readonly reference: FieldRef<"Product", 'String'>
+    readonly shortDescription: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Float'>
+    readonly rating: FieldRef<"Product", 'Int'>
+    readonly country: FieldRef<"Product", 'String'>
+    readonly specialty: FieldRef<"Product", 'String'>
+    readonly preferences: FieldRef<"Product", 'String'>
+    readonly likes: FieldRef<"Product", 'String'>
+    readonly dislikes: FieldRef<"Product", 'String'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly images: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
@@ -8858,8 +8939,15 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     reference: 'reference',
+    shortDescription: 'shortDescription',
     description: 'description',
     price: 'price',
+    rating: 'rating',
+    country: 'country',
+    specialty: 'specialty',
+    preferences: 'preferences',
+    likes: 'likes',
+    dislikes: 'dislikes',
     stock: 'stock',
     images: 'images',
     createdAt: 'createdAt',
@@ -8971,7 +9059,13 @@ export namespace Prisma {
   export const ProductOrderByRelevanceFieldEnum: {
     name: 'name',
     reference: 'reference',
+    shortDescription: 'shortDescription',
     description: 'description',
+    country: 'country',
+    specialty: 'specialty',
+    preferences: 'preferences',
+    likes: 'likes',
+    dislikes: 'dislikes',
     images: 'images'
   };
 
@@ -9221,8 +9315,15 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     reference?: StringFilter<"Product"> | string
+    shortDescription?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
+    rating?: IntNullableFilter<"Product"> | number | null
+    country?: StringNullableFilter<"Product"> | string | null
+    specialty?: StringNullableFilter<"Product"> | string | null
+    preferences?: StringNullableFilter<"Product"> | string | null
+    likes?: StringNullableFilter<"Product"> | string | null
+    dislikes?: StringNullableFilter<"Product"> | string | null
     stock?: IntFilter<"Product"> | number
     images?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -9234,8 +9335,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     reference?: SortOrder
+    shortDescription?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrder
+    rating?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    specialty?: SortOrderInput | SortOrder
+    preferences?: SortOrderInput | SortOrder
+    likes?: SortOrderInput | SortOrder
+    dislikes?: SortOrderInput | SortOrder
     stock?: SortOrder
     images?: SortOrder
     createdAt?: SortOrder
@@ -9251,8 +9359,15 @@ export namespace Prisma {
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
     name?: StringFilter<"Product"> | string
+    shortDescription?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
+    rating?: IntNullableFilter<"Product"> | number | null
+    country?: StringNullableFilter<"Product"> | string | null
+    specialty?: StringNullableFilter<"Product"> | string | null
+    preferences?: StringNullableFilter<"Product"> | string | null
+    likes?: StringNullableFilter<"Product"> | string | null
+    dislikes?: StringNullableFilter<"Product"> | string | null
     stock?: IntFilter<"Product"> | number
     images?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -9264,8 +9379,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     reference?: SortOrder
+    shortDescription?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrder
+    rating?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    specialty?: SortOrderInput | SortOrder
+    preferences?: SortOrderInput | SortOrder
+    likes?: SortOrderInput | SortOrder
+    dislikes?: SortOrderInput | SortOrder
     stock?: SortOrder
     images?: SortOrder
     createdAt?: SortOrder
@@ -9284,8 +9406,15 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Product"> | number
     name?: StringWithAggregatesFilter<"Product"> | string
     reference?: StringWithAggregatesFilter<"Product"> | string
+    shortDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     price?: FloatWithAggregatesFilter<"Product"> | number
+    rating?: IntNullableWithAggregatesFilter<"Product"> | number | null
+    country?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    specialty?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    preferences?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    likes?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    dislikes?: StringNullableWithAggregatesFilter<"Product"> | string | null
     stock?: IntWithAggregatesFilter<"Product"> | number
     images?: StringWithAggregatesFilter<"Product"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -9796,8 +9925,15 @@ export namespace Prisma {
   export type ProductCreateInput = {
     name: string
     reference: string
+    shortDescription?: string | null
     description?: string | null
     price: number
+    rating?: number | null
+    country?: string | null
+    specialty?: string | null
+    preferences?: string | null
+    likes?: string | null
+    dislikes?: string | null
     stock?: number
     images: string
     createdAt?: Date | string
@@ -9809,8 +9945,15 @@ export namespace Prisma {
     id?: number
     name: string
     reference: string
+    shortDescription?: string | null
     description?: string | null
     price: number
+    rating?: number | null
+    country?: string | null
+    specialty?: string | null
+    preferences?: string | null
+    likes?: string | null
+    dislikes?: string | null
     stock?: number
     images: string
     createdAt?: Date | string
@@ -9821,8 +9964,15 @@ export namespace Prisma {
   export type ProductUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     reference?: StringFieldUpdateOperationsInput | string
+    shortDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    specialty?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: NullableStringFieldUpdateOperationsInput | string | null
+    dislikes?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     images?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9834,8 +9984,15 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     reference?: StringFieldUpdateOperationsInput | string
+    shortDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    specialty?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: NullableStringFieldUpdateOperationsInput | string | null
+    dislikes?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     images?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9847,8 +10004,15 @@ export namespace Prisma {
     id?: number
     name: string
     reference: string
+    shortDescription?: string | null
     description?: string | null
     price: number
+    rating?: number | null
+    country?: string | null
+    specialty?: string | null
+    preferences?: string | null
+    likes?: string | null
+    dislikes?: string | null
     stock?: number
     images: string
     createdAt?: Date | string
@@ -9858,8 +10022,15 @@ export namespace Prisma {
   export type ProductUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     reference?: StringFieldUpdateOperationsInput | string
+    shortDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    specialty?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: NullableStringFieldUpdateOperationsInput | string | null
+    dislikes?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     images?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9870,8 +10041,15 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     reference?: StringFieldUpdateOperationsInput | string
+    shortDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    specialty?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: NullableStringFieldUpdateOperationsInput | string | null
+    dislikes?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     images?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10520,6 +10698,17 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type CartItemListRelationFilter = {
     every?: CartItemWhereInput
     some?: CartItemWhereInput
@@ -10540,8 +10729,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     reference?: SortOrder
+    shortDescription?: SortOrder
     description?: SortOrder
     price?: SortOrder
+    rating?: SortOrder
+    country?: SortOrder
+    specialty?: SortOrder
+    preferences?: SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
     stock?: SortOrder
     images?: SortOrder
     createdAt?: SortOrder
@@ -10551,6 +10747,7 @@ export namespace Prisma {
   export type ProductAvgOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
+    rating?: SortOrder
     stock?: SortOrder
   }
 
@@ -10558,8 +10755,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     reference?: SortOrder
+    shortDescription?: SortOrder
     description?: SortOrder
     price?: SortOrder
+    rating?: SortOrder
+    country?: SortOrder
+    specialty?: SortOrder
+    preferences?: SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
     stock?: SortOrder
     images?: SortOrder
     createdAt?: SortOrder
@@ -10570,8 +10774,15 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     reference?: SortOrder
+    shortDescription?: SortOrder
     description?: SortOrder
     price?: SortOrder
+    rating?: SortOrder
+    country?: SortOrder
+    specialty?: SortOrder
+    preferences?: SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
     stock?: SortOrder
     images?: SortOrder
     createdAt?: SortOrder
@@ -10581,6 +10792,7 @@ export namespace Prisma {
   export type ProductSumOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
+    rating?: SortOrder
     stock?: SortOrder
   }
 
@@ -10598,6 +10810,22 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
@@ -11073,6 +11301,14 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type CartItemUpdateManyWithoutProductNestedInput = {
     create?: XOR<CartItemCreateWithoutProductInput, CartItemUncheckedCreateWithoutProductInput> | CartItemCreateWithoutProductInput[] | CartItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: CartItemCreateOrConnectWithoutProductInput | CartItemCreateOrConnectWithoutProductInput[]
@@ -11483,6 +11719,33 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -12317,8 +12580,15 @@ export namespace Prisma {
   export type ProductCreateWithoutCartItemsInput = {
     name: string
     reference: string
+    shortDescription?: string | null
     description?: string | null
     price: number
+    rating?: number | null
+    country?: string | null
+    specialty?: string | null
+    preferences?: string | null
+    likes?: string | null
+    dislikes?: string | null
     stock?: number
     images: string
     createdAt?: Date | string
@@ -12329,8 +12599,15 @@ export namespace Prisma {
     id?: number
     name: string
     reference: string
+    shortDescription?: string | null
     description?: string | null
     price: number
+    rating?: number | null
+    country?: string | null
+    specialty?: string | null
+    preferences?: string | null
+    likes?: string | null
+    dislikes?: string | null
     stock?: number
     images: string
     createdAt?: Date | string
@@ -12384,8 +12661,15 @@ export namespace Prisma {
   export type ProductUpdateWithoutCartItemsInput = {
     name?: StringFieldUpdateOperationsInput | string
     reference?: StringFieldUpdateOperationsInput | string
+    shortDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    specialty?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: NullableStringFieldUpdateOperationsInput | string | null
+    dislikes?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     images?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12396,8 +12680,15 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     reference?: StringFieldUpdateOperationsInput | string
+    shortDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    specialty?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: NullableStringFieldUpdateOperationsInput | string | null
+    dislikes?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     images?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

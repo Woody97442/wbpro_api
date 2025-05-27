@@ -36,7 +36,7 @@ export const config = {
 
 export function handleCors(res: NextResponse) {
     res.headers.set("Access-Control-Allow-Origin", "*") // ou "http://localhost:5173" en dev
-    res.headers.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+    res.headers.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS")
     res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization")
     return res
 }

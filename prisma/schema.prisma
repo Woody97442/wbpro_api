@@ -55,16 +55,23 @@ model Address {
 
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  reference   String   @unique
-  description String?  @db.Text
-  price       Float    
-  stock       Int      @default(0)
-  images      String   @db.Text
-  cartItems   CartItem[]
-  createdAt   DateTime @default(now()) 
-  updatedAt   DateTime @updatedAt
+  id                Int       @id @default(autoincrement())
+  name              String
+  reference         String    @unique
+  shortDescription  String?
+  description       String?   @db.Text  // Correspond à longDescription
+  price             Float
+  rating            Int?
+  country           String?
+  specialty         String?
+  preferences       String?   @db.Text  // Stocké en JSON (array de strings)
+  likes             String?   @db.Text  // Stocké en JSON (array de strings)
+  dislikes          String?   @db.Text  // Stocké en JSON (array de strings)
+  stock             Int       @default(0)
+  images            String    @db.Text
+  cartItems         CartItem[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Order {
