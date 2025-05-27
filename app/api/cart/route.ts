@@ -4,7 +4,6 @@ import { handleCors } from '@/middleware'
 import { UserSession } from '@/types/types'
 import { verifyJwtToken } from '@/lib/tools'
 
-const secret = process.env.JWT_SECRET
 export async function GET(req: NextRequest) {
     try {
         const token = req.headers.get('Authorization')?.replace('Bearer ', '')

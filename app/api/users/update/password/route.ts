@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { checkThisAccess } from '@/lib/tools';
+import { checkThisAccess, verifyJwtToken } from '@/lib/tools';
 import { handleCors } from '@/middleware';
 import bcrypt from 'bcryptjs'
 import { userUpdatePasswordSchema } from '@/lib/schemas/user.schema';
+import { UserSession } from '@/types/types';
 
 /**
  * Modifier le mot de passe d'un utilisateur
  */
-export async function PUT(req: NextRequest, context: { params: { id: string } }) {
-    const params = await context.params
-    const { id } = params
-
+export async function PATCH(req: NextRequest) {
     try {
-        const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+        const token = req.headers.get('Authorization')?.replace('Bearer ', '')
+        if (!token) return handleCors(NextResponse.json({ error: 'Token manquant' }, { status: 401 }))
+        const userSession = await verifyJwtToken(token) as UserSession
+        if (!userSession) return handleCors(NextResponse.json({ error: 'Token manquant' }, { status: 401 }))
+        const userId = userSession.id
 
-        const accessCheck = await checkThisAccess(token, id);
+        const accessCheck = await checkThisAccess(token, userId.toString());
         if (!accessCheck.access) {
             return handleCors(NextResponse.json({ error: accessCheck.error }, { status: accessCheck.status }));
         }
@@ -31,11 +33,6 @@ export async function PUT(req: NextRequest, context: { params: { id: string } })
 
         if (!currentPassword || !newPassword) {
             return handleCors(NextResponse.json({ error: "Champs requis : currentPassword et newPassword" }, { status: 400 }));
-        }
-
-        const userId = parseInt(id, 10)
-        if (isNaN(userId)) {
-            return handleCors(NextResponse.json({ error: 'ID invalide' }, { status: 400 }))
         }
 
         const user = await prisma.user.findUnique({

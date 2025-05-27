@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { checkThisAccess, updateCartTotal, verifyJwtToken } from '@/lib/tools'
+import { checkThisAccess, verifyJwtToken } from '@/lib/tools'
 import { handleCors } from '@/middleware'
 import { UserSession } from '@/types/types'
 

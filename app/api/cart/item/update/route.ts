@@ -61,8 +61,6 @@ export async function PATCH(req: NextRequest) {
             },
         })
 
-        console.log(quantity)
-
         if (!cart) {
             return handleCors(NextResponse.json({ message: 'Panier non trouvé.', status: 404 }))
         }
