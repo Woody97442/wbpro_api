@@ -25,6 +25,24 @@ jest.mock('next/server', () => {
     };
 });
 
+// 👇 MOCK DE PRISMA
+jest.mock('@/lib/prisma', () => ({
+    prisma: {
+        product: {
+            findUnique: jest.fn().mockResolvedValue(null), // produit inexistant
+            create: jest.fn().mockResolvedValue({
+                id: 1,
+                name: 'Produit test',
+                description: 'Desc test',
+                price: 100,
+                reference: 'REF456',
+                stock: 10,
+                images: ['img1.jpg'],
+            }),
+        },
+    },
+}));
+
 describe('API POST /products', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -35,7 +53,7 @@ describe('API POST /products', () => {
             name: 'Test produit',
             description: 'Test desc',
             price: 99.99,
-            reference: 'REF123', // Ajouté ici
+            reference: 'REF123',
         };
 
         (checkLevelAccess as jest.Mock).mockResolvedValue({
@@ -50,7 +68,7 @@ describe('API POST /products', () => {
             headers: {
                 get: jest.fn().mockImplementation((key) =>
                     key.toLowerCase() === 'authorization'
-                        ? 'Bearer eyFakeToken.eyJ1c2VySWQiOiIxMjM0IiwibGV2ZWwiOiJpbnZhbGlkIn0='
+                        ? 'Bearer fakeToken'
                         : null
                 ),
             },
@@ -71,7 +89,7 @@ describe('API POST /products', () => {
             name: 'Produit test',
             description: 'Desc test',
             price: 100,
-            reference: 'REF456', // Ajouté ici
+            reference: 'REF456',
             stock: 10,
             images: ['img1.jpg'],
         };
@@ -88,17 +106,30 @@ describe('API POST /products', () => {
             headers: {
                 get: jest.fn().mockImplementation((key) =>
                     key.toLowerCase() === 'authorization'
-                        ? 'Bearer eyFakeToken.eyJ1c2VySWQiOjEyMzQsImxldmVsIjoyfQ=='
+                        ? 'Bearer fakeToken'
                         : null
                 ),
             },
         } as unknown as Request;
 
-        // Mock Prisma si besoin ici
-
         const response = await POST(mockReq);
 
-        expect(NextResponse.json).toHaveBeenCalled();
+        expect(NextResponse.json).toHaveBeenCalledWith(
+            {
+                message: 'Produit créé avec succès',
+                product: {
+                    id: 1,
+                    name: 'Produit test',
+                    description: 'Desc test',
+                    price: 100,
+                    reference: 'REF456',
+                    stock: 10,
+                    images: ['img1.jpg'],
+                },
+            },
+            { status: 201 }
+        );
+
         expect(response.status).toBe(201);
     });
 });
