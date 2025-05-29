@@ -103,10 +103,9 @@ jobs:
         key: ${{ secrets.VPS_SSH_KEY }}
         port: 22
         script: |
-          export PATH=$PATH:/root/.nvm/versions/node/v24.1.0/bin
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 24.1.0
           cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
-          pm2 delete wbpro-api || true
-          pm2 start npm --name wbpro-api -- run start
+          /root/.nvm/versions/node/v24.1.0/bin/pm2 delete wbpro-api || true
+          /root/.nvm/versions/node/v24.1.0/bin/pm2 start npm --name wbpro-api -- run start
