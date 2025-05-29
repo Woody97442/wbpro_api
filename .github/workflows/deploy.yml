@@ -1,0 +1,108 @@
+name: Deploy API to VPS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24.x'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run Jest tests
+      run: npx jest --ci
+
+    # 👉 Si les tests passent, on continue le déploiement sur le VPS
+    - name: Remove old build on VPS
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 22
+        script: |
+          cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
+          rm -rf .next
+
+    - name: Pull latest code from Git
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 22
+        script: |
+          cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
+          git reset --hard
+          git pull origin master
+
+    - name: Install dependencies on VPS
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 24.1.0
+          cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
+          npm install
+
+    - name: Prisma generate and push
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 24.1.0
+          cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
+          npx prisma generate
+          npx prisma db push
+
+    - name: Build the API
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 24.1.0
+          cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
+          npm run build
+
+    - name: Restart PM2 process
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 22
+        script: |
+          export PATH=$PATH:/root/.nvm/versions/node/v24.1.0/bin
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 24.1.0
+          cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
+          pm2 delete wbpro-api || true
+          pm2 start npm --name wbpro-api -- run start
