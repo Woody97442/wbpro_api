@@ -47,6 +47,7 @@ jobs:
         key: ${{ secrets.VPS_SSH_KEY }}
         port: 22
         script: |
+          git config --global --add safe.directory /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
           cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
           git reset --hard
           git pull origin master
