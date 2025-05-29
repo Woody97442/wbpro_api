@@ -108,4 +108,4 @@ jobs:
           nvm use 24.1.0
           cd /home/wbpro-rest-api/htdocs/rest-api.wbpro.fr
           /root/.nvm/versions/node/v24.1.0/bin/pm2 delete wbpro-api || true
-          /root/.nvm/versions/node/v24.1.0/bin/pm2 start npm --name wbpro-api -- run start
+          /root/.nvm/versions/node/v24.1.0/bin/pm2 start ecosystem.config.js --only wbpro-api
