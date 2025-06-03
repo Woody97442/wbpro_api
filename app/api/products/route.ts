@@ -38,7 +38,7 @@ export async function GET() {
 }
 
 /**
- * Créer un produit manuellement (uniquement accessible aux admins).
+ * Créer un produit manuellement 
  */
 export async function POST(req: Request) {
     try {
