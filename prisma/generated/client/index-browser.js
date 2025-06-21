@@ -148,15 +148,19 @@ exports.Prisma.ProductScalarFieldEnum = {
   description: 'description',
   price: 'price',
   rating: 'rating',
-  country: 'country',
-  specialty: 'specialty',
-  preferences: 'preferences',
-  likes: 'likes',
-  dislikes: 'dislikes',
   stock: 'stock',
   images: 'images',
+  categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  reference: 'reference',
+  image: 'image'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -239,12 +243,14 @@ exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   reference: 'reference',
   shortDescription: 'shortDescription',
   description: 'description',
-  country: 'country',
-  specialty: 'specialty',
-  preferences: 'preferences',
-  likes: 'likes',
-  dislikes: 'dislikes',
   images: 'images'
+};
+
+exports.Prisma.CategoryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  slug: 'slug',
+  reference: 'reference',
+  image: 'image'
 };
 
 exports.Prisma.OrderOrderByRelevanceFieldEnum = {
@@ -281,6 +287,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Address: 'Address',
   Product: 'Product',
+  Category: 'Category',
   Order: 'Order',
   Cart: 'Cart',
   Invoice: 'Invoice',
