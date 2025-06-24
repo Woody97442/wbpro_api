@@ -1,7 +1,6 @@
 import { POST, OPTIONS } from '@/app/api/auth/login/route'
 import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
-import { SignJWT } from 'jose'
 
 // Mock prisma, bcryptjs et jose
 jest.mock('@/lib/prisma', () => ({
@@ -100,7 +99,7 @@ describe('POST /api/auth/login', () => {
 })
 
 describe('OPTIONS /api/auth/login', () => {
-    it('doit retourner status 204 pour preflight', async () => {
+    it('doit retourner status 204 pour OPTIONS', async () => {
         const req = new Request('http://localhost/api/auth/login', {
             method: 'OPTIONS',
         })
